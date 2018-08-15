@@ -24,7 +24,40 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// date string is empty
+app.get('/api/timestamp', (req, res) => {
+    res.json({
+        "unix": new Date().getTime(),
+        "utc": new Date().toUTCString()
+    });
+});
 
+app.get('/api/timestamp/:date_string', (req, res) => {
+    const date_string = req.params.date_string;
+
+    if(isNaN(date_string)) {
+        if(isNaN(Date.parse(date_string))) {
+            res.json({ "error" : "Invalid Date" });
+        } else {
+            res.json({
+                "unix": new Date(date_string).getTime(),
+                "utc": new Date(date_string).toUTCString()
+            });
+        }
+    } else {
+        const utc = new Date(parseInt(date_string)).toUTCString();
+        if(utc === "Invalid Date")
+            res.json({ "error" : "Invalid Date" });
+        res.json({
+            "unix": date_string,
+            "utc": utc
+        });
+    }
+});
+
+app.get('*', (req, res) => {
+    res.send("Not Found.");
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
