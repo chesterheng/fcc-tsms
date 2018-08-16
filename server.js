@@ -54,7 +54,7 @@ app.get('/api/timestamp/:date_string', (req, res) => {
     }
 });
 
-app.get('*', (req, res) => {
+app.all('*', (req, res) => {
     res.send("Not Found.");
 });
 
